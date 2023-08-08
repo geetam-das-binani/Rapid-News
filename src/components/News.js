@@ -15,17 +15,21 @@ export default function News(props) {
   };
 
   const updatenews = async () => {
-    props.Progress(0);
-     const url = `https://newsapi.org/v2/top-headlines?
-     country=${props.Country}&category=${props.Category}&apiKey=${props.ApiKey}&page=${Page}&pageSize=${props.PageSize}`;
-    props.Progress(30);
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    setLoading(false);
-    props.Progress(70);
-    setArticles(parsedData.articles);
-    setTotalResults(parsedData.totalResults);
-    props.Progress(100);
+    try {
+      props.Progress(0);
+      const url = `https://newsapi.org/v2/top-headlines?
+      country=${props.Country}&category=${props.Category}&apiKey=${props.ApiKey}&page=${Page}&pageSize=${props.PageSize}`;
+      props.Progress(30);
+      let data = await fetch(url);
+      let parsedData = await data.json();
+      setLoading(false);
+      props.Progress(70);
+      setArticles(parsedData.articles);
+      setTotalResults(parsedData.totalResults);
+      props.Progress(100);
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   useEffect(() => {
@@ -34,16 +38,20 @@ export default function News(props) {
   }, []);
 
   const fetchData = async () => {
-    const url = `https://newsapi.org/v2/top-headlines?country=${
-      props.Country
-    }&category=${props.Category}&apiKey=${props.ApiKey}&page=${
-      Page + 1
-    }&pageSize=${props.PageSize}`;
-    setPage(Page + 1);
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    setArticles(articles.concat(parsedData.articles));
-    setTotalResults(parsedData.totalResults);
+    try {
+      const url = `https://newsapi.org/v2/top-headlines?country=${
+        props.Country
+      }&category=${props.Category}&apiKey=${props.ApiKey}&page=${
+        Page + 1
+      }&pageSize=${props.PageSize}`;
+      setPage(Page + 1);
+      let data = await fetch(url);
+      let parsedData = await data.json();
+      setArticles(articles.concat(parsedData.articles));
+      setTotalResults(parsedData.totalResults);
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   return (
@@ -67,7 +75,7 @@ export default function News(props) {
       >
         <div className="container">
           <div className="row">
-            {articles.map((news, index) => {
+            {articles?.map((news, index) => {
               let {
                 title,
                 description,
